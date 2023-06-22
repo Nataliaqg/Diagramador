@@ -16,6 +16,7 @@ class CreatePizarrasTable extends Migration
         Schema::create('pizarras', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->json('tablas')->nullable();
         });
     }
 

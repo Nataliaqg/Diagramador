@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class pizarra extends Model
 {
     use HasFactory;
+    protected $fillable = ['tablas'];
+
 }
