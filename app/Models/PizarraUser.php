@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class pizarra extends Model
+class PizarraUser extends Model
 {
     use HasFactory;
-    protected $table='pizarras';
-    protected $fillable = ['nombre', 'estado','guest_qr_path'];
-
-    protected $guarded=[
+    protected $table='pizarra_users';
+    protected $guarded = [
         'id',
         'created_at',
         'updated_at',
@@ -21,7 +19,7 @@ class pizarra extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function users(){
-        return $this->hasMany(User::class);
+    public function pizarra(){
+        return $this->belongsTo(pizarra::class);
     }
 }

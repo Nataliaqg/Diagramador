@@ -15,6 +15,11 @@ class CreatePizarrasTable extends Migration
     {
         Schema::create('pizarras', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->json('estado')->nullable();
+            $table->string('guest_qr_path')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
             $table->json('tablas')->nullable();
         });

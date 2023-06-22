@@ -25,7 +25,7 @@
                                 Agregar Persona</button> --}}
                                 <!-- ... código HTML anterior ... -->
 
-<button wire:click="crearTabla('Nueva Persona', ['atributo1: Tipo1', 'atributo2: Tipo2'])">Agregar Persona</button>
+{{-- <button wire:click="crearTabla('Nueva Persona', ['atributo1: Tipo1', 'atributo2: Tipo2'])">Agregar Persona</button> --}}
 
 <!-- ... código HTML posterior ... -->
 
@@ -65,12 +65,13 @@
         });
 
 
-
-        @foreach(json_decode($tablas) as $persona)
-    var persona = @json($persona);
-    var personaShape = new joint.shapes.uml.Class(persona);
-    personaShape.addTo(graph);
-@endforeach
+        @if(isset($tablas))
+    @foreach(json_decode($tablas) as $persona)
+        var persona = @json($persona);
+        var personaShape = new joint.shapes.uml.Class(persona);
+        personaShape.addTo(graph);
+    @endforeach
+   @endif
 
 
         // Agrega el código JavaScript para manejar el evento de Livewire
@@ -97,8 +98,8 @@
                 nuevaTabla.addTo(graph);
 
                 // Llamar a la función de Livewire para crear la nueva tabla
-               // Livewire.emit('crearTabla', tableName, attributes);
-               Livewire.emit('crearTabla');
+                Livewire.emit('crearTabla', tableName, attributes);
+             
             }
         });
 
