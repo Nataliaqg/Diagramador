@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class pizarra extends Model
+class PizarraUser extends Model
 {
     use HasFactory;
 
@@ -13,7 +13,7 @@ class pizarra extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function users(){
-        return $this->hasMany(User::class);
+    public function pizarra(){
+        return $this->belongsTo(pizarra::class);
     }
 }

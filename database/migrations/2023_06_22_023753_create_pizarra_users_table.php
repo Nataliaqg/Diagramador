@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePizarrasTable extends Migration
+class CreatePizarraUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreatePizarrasTable extends Migration
      */
     public function up()
     {
-        Schema::create('pizarras', function (Blueprint $table) {
+        Schema::create('pizarra_users', function (Blueprint $table) {
             $table->id();
-            $table->json('estado')->nullable();
-            $table->string('guest_qr_path')->nullable();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ class CreatePizarrasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pizarras');
+        Schema::dropIfExists('pizarra_users');
     }
 }
