@@ -4,16 +4,17 @@ namespace App\Http\Livewire\Pizarra;
 
 use App\Models\pizarra;
 use Livewire\Component;
+use Livewire\Livewire;
 use PhpParser\Node\Expr\Cast\String_;
 
 class Creartabla extends Component
 {
-
+    public $tablaSeleccionadaId;
     public $nombreTabla;
     public $atributos = [];
     public $pizarra;
     public $tablas = [];
-    protected $listeners = ['crearTabla','render'];
+    protected $listeners = ['crearTabla', 'render','actualizarTablaSeleccionada'];
 
     public function render()
 
@@ -24,30 +25,49 @@ class Creartabla extends Component
         } else {
             $this->tablas = $pizarra->estado;
         }
+        // Inicializar la propiedad $tablaSeleccionadaId
+        $this->tablaSeleccionadaId = null;
         return view('livewire.pizarra.creartabla');
     }
 
-public function crearTabla($elementosInformacion, $relacionesInformacion)
-{
-    $this->pizarra = pizarra::find(1);
+    public function crearTabla($elementosInformacion, $relacionesInformacion)
+    {
+        $this->pizarra = pizarra::find(1);
 
-    // Combinar la información de las tablas y las relaciones en un solo array
-    $data = [
-        'tablas' => $elementosInformacion,
-        'relaciones' => $relacionesInformacion
-    ];
+        // Combinar la información de las tablas y las relaciones en un solo array
+        $data = [
+            'tablas' => $elementosInformacion,
+            'relaciones' => $relacionesInformacion
+        ];
 
-    // Codificar el array combinado como JSON
-    $estadoJson = json_encode($data);
+        // Codificar el array combinado como JSON
+        $estadoJson = json_encode($data);
 
-    // Asignar el nuevo JSON al atributo 'estado' de la pizarra
-    $this->pizarra->estado = $estadoJson;
+        // Asignar el nuevo JSON al atributo 'estado' de la pizarra
+        $this->pizarra->estado = $estadoJson;
 
-    // Guardar los cambios en la base de datos
-    $this->pizarra->save();
+        // Guardar los cambios en la base de datos
+        $this->pizarra->save();
 
-    $this->tablas = $this->pizarra->estado;
-    $this->render();
-}
+        $this->tablas = $this->pizarra->estado;
+        $this->render();
+    }
 
+    public function actualizarTablaSeleccionada($tablaId)
+    {
+        // Obtener la instancia actualizada de la pizarra
+        $this->pizarra = pizarra::find(1);
+    
+        // Verificar si se encontró la pizarra
+        if ($this->pizarra) {
+            // Actualizar la propiedad $tablaSeleccionadaId con el ID de la tabla seleccionada
+            $this->tablaSeleccionadaId = $tablaId;
+    
+            // Emitir el evento 'idTablaSeleccionada' con el valor actual de $this->pizarra
+            $this->emit('idTablaSeleccionada', $this->pizarra, $this->tablaSeleccionadaId);
+        }
+    
+        //dd($this->pizarra, $this->tablaSeleccionadaId);
+    }
+    
 }
