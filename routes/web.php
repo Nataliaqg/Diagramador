@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Pizarra\GenerarVistas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,3 @@ Route::get('/prueba', function () {
     return view('vistaprueba');
 });
 Route::get('/scripts', [App\Http\Controllers\GenerarScripts::class])->name('scripts');
-
