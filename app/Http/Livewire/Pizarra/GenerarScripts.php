@@ -16,7 +16,7 @@ class GenerarScripts extends Component
     {
         $pizarra = pizarra::find(1);
         $this->NOMBRE = $pizarra->nombre;
-        $this->ESTADO = $pizarra->estado;       
+        $this->ESTADO = $pizarra->estado; 
 
         // Asigna el script resultado a la variable $scriptResultado
       
