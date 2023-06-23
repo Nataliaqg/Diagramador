@@ -10,7 +10,7 @@ class GenerarScripts extends Component
     public $ESTADO;
     public $pizarra; 
     public $scriptResultado; // Agrega la variable $scriptResultado
-    protected $listeners = ['generarScriptTablaspsql','generarScriptTablasSQLSERVVER','generarScriptTablasMYSQL'];
+    protected $listeners = ['generarScriptTablaspsql','generarScriptTablasSQLSERVVER','generarScriptTablasMYSQL','generarScriptTablasOracle'];
 
     public function mount(pizarra $pizarra){
         $this->pizarra = $pizarra;
@@ -41,6 +41,7 @@ class GenerarScripts extends Component
         $tablas = $data->tablas;
 
         $script = 'CREATE DATABASE   '. $this->NOMBRE. ';'. PHP_EOL;
+        $script .= ' USE DATABASE '. PHP_EOL;
 
         foreach ($tablas as $tabla) {
             $tablaName = $tabla->name;
@@ -50,7 +51,7 @@ class GenerarScripts extends Component
             $script .= '    id SERIAL PRIMARY KEY,' . PHP_EOL;
 
             foreach ($tablaAttributes as $attribute) {
-                $script .= '    ' . $attribute . ' VARCHAR(100),' . PHP_EOL;
+                $script .= '    ' . $attribute . ' VARCHAR(50),' . PHP_EOL;
             }
 
             $script = rtrim($script, ',' . PHP_EOL) . PHP_EOL . ');' . PHP_EOL . PHP_EOL;
@@ -70,6 +71,7 @@ class GenerarScripts extends Component
         $tablas = $data->tablas;
 
         $script = 'CREATE DATABASE   '. $this->NOMBRE. ';'. PHP_EOL;
+        $script .= ' USE DATABASE '. PHP_EOL;
 
         foreach ($tablas as $tabla) {
             $tablaName = $tabla->name;
@@ -79,7 +81,7 @@ class GenerarScripts extends Component
             $script .= '    id INT IDENTITY(1,1) PRIMARY KEY,' . PHP_EOL;
 
             foreach ($tablaAttributes as $attribute) {
-                $script .= '    ' . $attribute . ' VARCHAR(100),' . PHP_EOL;
+                $script .= '    ' . $attribute . ' VARCHAR(50),' . PHP_EOL;
             }
 
             $script = rtrim($script, ',' . PHP_EOL) . PHP_EOL . ');' . PHP_EOL . PHP_EOL;
@@ -97,6 +99,7 @@ class GenerarScripts extends Component
         $data = json_decode($this->ESTADO);
         $tablas = $data->tablas;
         $script = 'CREATE DATABASE   '. $this->NOMBRE. ';'. PHP_EOL;
+        $script .= ' USE DATABASE '. PHP_EOL;
 
         foreach ($tablas as $tabla) {
             $tablaName = $tabla->name;
@@ -106,7 +109,7 @@ class GenerarScripts extends Component
             $script .= '    id INT AUTO_INCREMENT PRIMARY KEY,' . PHP_EOL;
 
             foreach ($tablaAttributes as $attribute) {
-                $script .= '    ' . $attribute . ' VARCHAR(100),' . PHP_EOL;
+                $script .= '    ' . $attribute . ' VARCHAR(50),' . PHP_EOL;
             }
 
             $script = rtrim($script, ',' . PHP_EOL) . PHP_EOL . ');' . PHP_EOL . PHP_EOL;
@@ -114,5 +117,36 @@ class GenerarScripts extends Component
         $this->scriptResultado = $script;
         return $script;
     }
+
+    public function generarScriptTablasOracle()
+{
+    if ($this->ESTADO == null) {
+        return;
+    }
+
+    $data = json_decode($this->ESTADO);
+    $tablas = $data->tablas;
+
+    $script = 'CREATE DATABASE ' . $this->NOMBRE . ';' . PHP_EOL;
+    $script .= '"PARA USAR LA BASE DE DATOS" '. '"sqlplus usuario/contraseña@nombre_basedatos"'. PHP_EOL;
+
+    foreach ($tablas as $tabla) {
+        $tablaName = $tabla->name;
+        $tablaAttributes = $tabla->attributes;
+
+        $script .= 'CREATE TABLE ' . $tablaName . ' (' . PHP_EOL;
+        $script .= '    id NUMBER PRIMARY KEY,' . PHP_EOL;
+
+        foreach ($tablaAttributes as $attribute) {
+            $script .= '    ' . $attribute . ' VARCHAR(50),' . PHP_EOL;
+        }
+
+        $script = rtrim($script, ',' . PHP_EOL) . PHP_EOL . ');' . PHP_EOL . PHP_EOL;
+    }
+
+    $this->scriptResultado = $script;
+    return $script;
+}
+
 }
 

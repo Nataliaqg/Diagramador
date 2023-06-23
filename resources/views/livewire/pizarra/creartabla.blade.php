@@ -26,21 +26,29 @@
                                     </div>
                                    
                                         <button id="btnAgregarTabla" class="btn btn-primary">Agregar Tabla</button>
+
+
                                         <br>
-                                        <button id="guardarPizarra" type="button" class="btn btn-outline-success">Guardar Pizarra</button>
-                                              <br>                       
-                                              <button id="enviarId" type="button" class="btn btn-success">Generar Vista</button>
+                                        <br>
+                                        <div class="form-group m-3">
+                                            <label for="tipoRelacion">Tipo de Relación:</label>
+                                            <select id="tipoRelacion" class="form-control">
+                                                <option value="composicion">Composición</option>
+                                                <option value="agregacion">Agregación</option>
+                                                <option value="asociacion">Asociación</option>
+                                                <option value="generalizacion">Generalización</option>
+                                            </select>
+                                        </div>     
+
+                                        <button id="btnAgregarRelacion" class="btn btn-primary ">Agregar Relación</button>  
+
+                                        <button id="enviarId" type="button" class="btn btn-success m-5">Generar Vista</button>
+
+                                        <button id="guardarPizarra" type="button" class="btn btn-outline-success m-5">Guardar Diagrama</button>
+                                                                    
+                                
                                     
-                                              <div class="form-group">
-                                                <label for="tipoRelacion">Tipo de Relación:</label>
-                                                <select id="tipoRelacion" class="form-control">
-                                                    <option value="composicion">Composición</option>
-                                                    <option value="agregacion">Agregación</option>
-                                                    <option value="asociacion">Asociación</option>
-                                                    <option value="generalizacion">Generalización</option>
-                                                </select>
-                                            </div>                                            
-                                            <button id="btnAgregarRelacion" class="btn btn-primary">Agregar Relación</button>                                      
+                                                                                 
         
                             </div>
                           
@@ -185,11 +193,11 @@
                     },
                     size: {
                         width: 120,
-                        height: 80
+                        height: 100
                     },
                     name: tableName,
                     attributes: attributes,
-                    methods: ['metodo1()', 'metodo2()'],
+                    methods: [],
                     attrs: {
                         '.uml-class-name-rect': { fill: 'yellow' }, // Cambiar el color de fondo a amarillo
                         '.uml-class-attrs-rect, .uml-class-methods-rect': { fill: 'yellow' } // Cambiar el color de los rectángulos de atributos y métodos a amarillo

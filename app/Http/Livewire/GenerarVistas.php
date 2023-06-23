@@ -53,41 +53,78 @@ class GenerarVistas extends Component
 }
 
 function generarPlantillaHTML($nombreTabla, $atributos)
-    {
-     
-        $html = '<h2>' . $nombreTabla . '</h2>';
-        
-        // Generar campos de entrada para los atributos
-        foreach ($atributos as $atributo) {
-            $html .= '<label for="' . $atributo . '">' . $atributo . ':</label>';
-            $html .= '<input type="text" id="' . $atributo . '" name="' . $atributo . '"><br>';
+{
+    $html = '<div class="card custom-card">';
+    $html .= '<div class="card-body">';
+    $html .= '<h2 class="card-title">' . $nombreTabla . '</h2>';
+    $html .= '<style>
+        .edit-button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         
-        // Agregar botones "Guardar" y "Eliminar"
-        $html .= '<button onclick="guardar()">Guardar</button>';
-        $html .= '<button onclick="eliminar()">Eliminar</button>';
+        .edit-button.edit {
+            background-color: #2196F3;
+        }
         
-        // Agregar un contenedor para mostrar el resultado
-        $html .= '<div id="resultado"></div>';
+        .edit-button.delete {
+            background-color: #F44336;
+        }
         
-        // Agregar el script JavaScript para las funciones guardar() y eliminar()
-        $html .= '
-            <script>
-                function guardar() {
-                    // Código para guardar los datos aquí...
-                    document.getElementById("resultado").innerHTML = "Datos guardados";
-                    document.getElementById("resultadoVista").value = document.getElementById("resultado").innerHTML;
-                }
-                
-                function eliminar() {
-                    // Código para eliminar los datos aquí...
-                    document.getElementById("resultado").innerHTML = "Datos eliminados";
-                    document.getElementById("resultadoVista").value = document.getElementById("resultado").innerHTML;
-                }
-            </script>
-        ';
-        $this->scriptResultado = $html;
-        return $html;
+        .edit-button:hover {
+            background-color: #555;
+        }
+        .custom-card {
+            background-color: #EAEAFF;
+        }
+    </style>';
+    
+    // Generar campos de entrada para los atributos
+    foreach ($atributos as $atributo) {
+        $html .= '<label for="' . $atributo . '">' . $atributo . ':</label>'.'<br>' ;
+        $html .= '<input type="text" id="' . $atributo . '" name="' . $atributo . '"><br>';
     }
+    
+    // Agregar botones "Guardar" y "Eliminar"
+    $html .= '<button class="edit-button edit m-3" onclick="guardar()">Guardar</button>';
+    $html .= '<button class="edit-button edit m-3" onclick="eliminar()">Eliminar</button>';
+    $html .= '<button class="edit-button edit m-3" onclick="editar()">Editar</button>';
+    
+    // Agregar un contenedor para mostrar el resultado
+    $html .= '<div id="resultado"></div>';
+    
+    // Agregar el script JavaScript para las funciones guardar(), eliminar() y editar()
+    $html .= '
+        <script>
+            function guardar() {
+                // Código para guardar los datos aquí...
+                document.getElementById("resultado").innerHTML = "Datos guardados";
+                document.getElementById("resultadoVista").value = document.getElementById("resultado").innerHTML;
+            }     
+            
+            function eliminar() {
+                // Código para eliminar los datos aquí...
+                document.getElementById("resultado").innerHTML = "Datos eliminados";
+                document.getElementById("resultadoVista").value = document.getElementById("resultado").innerHTML;
+            }     
+            
+            function editar() {
+                // Código para editar los datos aquí...
+                document.getElementById("resultado").innerHTML = "Datos editados";
+                document.getElementById("resultadoVista").value = document.getElementById("resultado").innerHTML;
+            }
+        </script>
+    ';
+    
+    $html .= '</div>';
+    $html .= '</div>';
+    
+    $this->scriptResultado = $html;
+    return $html;
+}
+
 
 }
