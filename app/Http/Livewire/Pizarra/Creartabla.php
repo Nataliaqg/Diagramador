@@ -27,23 +27,6 @@ class Creartabla extends Component
         return view('livewire.pizarra.creartabla');
     }
 
-
-// public function crearTabla($elementosInformacion)
-// {
-//     $this->pizarra = pizarra::find(1);  
-    
-//     // Codificar el arreglo resultante como JSON
-//     $tablasJson = json_encode($elementosInformacion);
-//     // Asignar el nuevo JSON al atributo 'tablas'   
-    
-//     $this->pizarra->estado = $tablasJson;
-
-//     // Guardar los cambios en la base de datos
-//     $this->pizarra->save();
-//     $this->tablas=$this->pizarra->estado;
-//     $this->render();
-// }
-
 public function crearTabla($elementosInformacion, $relacionesInformacion)
 {
     $this->pizarra = pizarra::find(1);
@@ -66,9 +49,5 @@ public function crearTabla($elementosInformacion, $relacionesInformacion)
     $this->tablas = $this->pizarra->estado;
     $this->render();
 }
-
-
-
-    
 
 }
