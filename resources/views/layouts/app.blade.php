@@ -16,9 +16,13 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.2/joint.css" />
+    <!-- Agrega esta línea en la sección head del archivo HTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.1.0/joint.min.js"></script>
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="https://unpkg.com/gojs/release/go.js"></script>
     @livewireStyles
 </head>
 <body>
@@ -82,6 +86,9 @@
         <main class="py-4">
             @yield('content')
         </main>
+        <!-- Agrega esta línea justo antes de cerrar el cuerpo del archivo HTML -->
+<script src="script.js"></script>
+
     </div>
     @livewireScripts
 </body>

@@ -25,3 +25,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/prueba', function () {
     return view('vistaprueba');
 });
+Route::get('/scripts', [App\Http\Controllers\GenerarScripts::class])->name('scripts');
+
