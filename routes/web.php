@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Pizarra\GenerarVistas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,3 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/scripts', [App\Http\Controllers\GenerarScripts::class])->name('scripts');
-
