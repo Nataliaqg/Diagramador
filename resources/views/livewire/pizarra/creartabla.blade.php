@@ -2,35 +2,50 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8" style="width: 90%">
-                <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
-
+                <div class="card">                 
                     <div class="card-body">
+                        <div class="row align-items-start">
+                            <div class="col">                                
                         @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-                        <!-- Contenido del diagrama de JointJS -->
-                        <div id="myholder"></div>
-                        <button id="btnAgregarRelacion">Agregar Relación</button>
-
-                        <div>
-                            <input type="text" id="inputTableName" placeholder="Nombre de la tabla">
-                            <input type="text" id="inputAttributes" placeholder="Atributos separados por comas">
-                            <button id="btnAgregarTabla">Agregar Tabla</button>
-                            <button id="guardarPizarra">Guardar Pizarra</button>
-                            <button id="enviarId">Enviar id</button>
-                            <label for="tipoRelacion">Tipo de Relación:</label>
-                            <select id="tipoRelacion">
-                                <option value="composicion">Composición</option>
-                                <option value="agregacion">Agregación</option>
-                                <option value="asociacion">Asociación</option>
-                                <option value="generalizacion">Generalización</option>
-                            </select>
-
-
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
                         </div>
+                    @endif
+                                <div id="myholder"></div>
+                            </div>
+                            <div class="col ">                         
+                                  
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <input type="text" id="inputTableName" class="form-control" placeholder="Nombre de la tabla">
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input type="text" id="inputAttributes" class="form-control" placeholder="Atributos separados por comas">
+                                        </div>
+                                      
+                                    </div>
+                                   
+                                        <button id="btnAgregarTabla" class="btn btn-primary">Agregar Tabla</button>
+                                        <br>
+                                        <button id="guardarPizarra" type="button" class="btn btn-outline-success">Guardar Pizarra</button>
+                                              <br>                       
+                                              <button id="enviarId" type="button" class="btn btn-success">Generar Vista</button>
+                                    
+                                              <div class="form-group">
+                                                <label for="tipoRelacion">Tipo de Relación:</label>
+                                                <select id="tipoRelacion" class="form-control">
+                                                    <option value="composicion">Composición</option>
+                                                    <option value="agregacion">Agregación</option>
+                                                    <option value="asociacion">Asociación</option>
+                                                    <option value="generalizacion">Generalización</option>
+                                                </select>
+                                            </div>                                            
+                                            <button id="btnAgregarRelacion" class="btn btn-primary">Agregar Relación</button>                                      
+        
+                            </div>
+                          
+                          </div>
+
                     </div>
                 </div>
             </div>
@@ -56,8 +71,8 @@
         var paper = new joint.dia.Paper({
             el: document.getElementById('myholder'),
             model: graph,
-            width: 600,
-            height: 400,
+            width: 800,
+            height: 800,
             gridSize: 1,
             cellViewNamespace: namespace
         });
@@ -72,17 +87,27 @@
                 $tablasArray = $data['tablas'];
             @endphp
             @foreach ($tablasArray as $persona)
-                var persona = {
-                    id: "{{ $persona['id'] }}",
-                    position: {
-                        x: {{ $persona['position']['x'] }},
-                        y: {{ $persona['position']['y'] }}
-                    },
-                    name: "{{ $persona['name'] }}",
-                    attributes: {!! json_encode($persona['attributes']) !!}
-                };
-                var personaShape = new joint.shapes.uml.Class(persona);
-                personaShape.addTo(graph);
+    var persona = {
+        id: "{{ $persona['id'] }}",
+        position: {
+            x: {{ $persona['position']['x'] }},
+            y: {{ $persona['position']['y'] }}
+        },
+        size: {
+            width: 120,
+            height: 100
+        },
+        name: "{{ $persona['name'] }}",
+        attributes: {!! json_encode($persona['attributes']) !!},
+        attrs: {
+            '.uml-class-name-rect': { fill: 'lightblue' }, // Cambiar el color de fondo
+            '.uml-class-name-text': { fill: 'black' }, // Cambiar el color del texto
+            '.uml-class-attrs-rect, .uml-class-methods-rect': { fill: 'pink' }, // Cambiar el color de los rectángulos de atributos y métodos
+            '.uml-class-attrs-text, .uml-class-methods-text': { fill: 'black' } // Cambiar el color del texto de atributos y métodos
+        }
+    };
+    var personaShape = new joint.shapes.uml.Class(persona);
+    personaShape.addTo(graph);
 
                 // Guardar la información de la tabla en el array
                 tablasInformacion.push({
@@ -152,6 +177,7 @@
 
             if (tableName.trim() !== '' && attributeString.trim() !== '') {
                 var attributes = attributeString.split(',');
+              
                 var nuevaTabla = new joint.shapes.uml.Class({
                     position: {
                         x: 200,
@@ -163,9 +189,12 @@
                     },
                     name: tableName,
                     attributes: attributes,
-                    methods: ['metodo1()', 'metodo2()']
+                    methods: ['metodo1()', 'metodo2()'],
+                    attrs: {
+                        '.uml-class-name-rect': { fill: 'yellow' }, // Cambiar el color de fondo a amarillo
+                        '.uml-class-attrs-rect, .uml-class-methods-rect': { fill: 'yellow' } // Cambiar el color de los rectángulos de atributos y métodos a amarillo
+                    }
                 });
-
                 nuevaTabla.addTo(graph);
 
                 // Guardar la información de la tabla en el array

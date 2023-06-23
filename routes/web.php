@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Pizarra\ShowPizarra;
+use App\Http\Controllers\Pizarra\ShowScripts;
+use App\Http\Livewire\GenerarVistas as LivewireGenerarVistas;
+use App\Http\Livewire\Pizarra\GenerarScripts;
 use App\Http\Livewire\Pizarra\GenerarVistas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,8 +26,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/ShowPizarra/{id}', [ShowPizarra::class,'index'])->name('showpizarra');
+Route::get('/scripts/{id}', [ShowScripts::class,'index'])->name('scripts');
+Route::get('/vistas', [LivewireGenerarVistas::class, 'mount'])->name('generarvista');
+
 
 Route::get('/prueba', function () {
     return view('vistaprueba');
 });
-Route::get('/scripts', [App\Http\Controllers\GenerarScripts::class])->name('scripts');
+

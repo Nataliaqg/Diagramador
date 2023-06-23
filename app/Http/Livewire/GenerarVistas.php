@@ -19,6 +19,7 @@ class GenerarVistas extends Component
         return view('livewire.pizarra.generar-vistas');
     }
 
+
     //recibe el contenido de pizarra y tambien el id de la tabla seleccionada
     public function idTablaSeleccionada($contenidoPizarra, $idTablaSeleccionada)
 {

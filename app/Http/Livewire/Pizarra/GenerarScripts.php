@@ -8,15 +8,21 @@ class GenerarScripts extends Component
 {
     public $NOMBRE;
     public $ESTADO;
+    public $pizarra; 
     public $scriptResultado; // Agrega la variable $scriptResultado
     protected $listeners = ['generarScriptTablaspsql','generarScriptTablasSQLSERVVER','generarScriptTablasMYSQL'];
+
+    public function mount(pizarra $pizarra){
+        $this->pizarra = $pizarra;
+  
+    }
 
 
     public function render()
     {
-        $pizarra = pizarra::find(1);
-        $this->NOMBRE = $pizarra->nombre;
-        $this->ESTADO = $pizarra->estado; 
+        
+        $this->NOMBRE = $this->pizarra->nombre;
+        $this->ESTADO = $this->pizarra->estado; 
 
         // Asigna el script resultado a la variable $scriptResultado
       
@@ -27,6 +33,10 @@ class GenerarScripts extends Component
     public function generarScriptTablaspsql()
     {
        //dd('estaaqui');
+       if($this->ESTADO== null){
+       return ;       
+
+       }
         $data = json_decode($this->ESTADO);
         $tablas = $data->tablas;
 
@@ -45,12 +55,17 @@ class GenerarScripts extends Component
 
             $script = rtrim($script, ',' . PHP_EOL) . PHP_EOL . ');' . PHP_EOL . PHP_EOL;
         }
+
         $this->scriptResultado = $script;
         return $script;
     }
 
     public function generarScriptTablasSQLSERVVER()
     {
+        if($this->ESTADO== null){
+            return ;       
+     
+            }
         $data = json_decode($this->ESTADO);
         $tablas = $data->tablas;
 
@@ -75,6 +90,10 @@ class GenerarScripts extends Component
 
     public function generarScriptTablasMYSQL()
     {
+        if($this->ESTADO== null){
+            return ;       
+     
+            }
         $data = json_decode($this->ESTADO);
         $tablas = $data->tablas;
         $script = 'CREATE DATABASE   '. $this->NOMBRE. ';'. PHP_EOL;

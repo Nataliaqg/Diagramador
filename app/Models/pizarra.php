@@ -9,7 +9,7 @@ class pizarra extends Model
 {
     use HasFactory;
     protected $table='pizarras';
-    protected $fillable = ['nombre', 'estado','guest_qr_path'];
+    protected $fillable = ['nombre', 'estado','guest_qr_path','user_id'];
 
     protected $guarded=[
         'id',

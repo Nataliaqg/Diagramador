@@ -16,10 +16,14 @@ class Creartabla extends Component
     public $tablas = [];
     protected $listeners = ['crearTabla', 'render','actualizarTablaSeleccionada'];
 
+    public function mount(pizarra $pizarra){
+        $this->pizarra = $pizarra;
+  
+    }
     public function render()
 
     {
-        $pizarra = pizarra::find(1);
+        $pizarra = $this->pizarra;
         if ($pizarra == null) {
             $this->tablas = null;
         } else {
@@ -32,7 +36,7 @@ class Creartabla extends Component
 
     public function crearTabla($elementosInformacion, $relacionesInformacion)
     {
-        $this->pizarra = pizarra::find(1);
+        // $this->pizarra = pizarra::find(1);
 
         // Combinar la información de las tablas y las relaciones en un solo array
         $data = [
@@ -56,7 +60,7 @@ class Creartabla extends Component
     public function actualizarTablaSeleccionada($tablaId)
     {
         // Obtener la instancia actualizada de la pizarra
-        $this->pizarra = pizarra::find(1);
+        // $this->pizarra = pizarra::find(1);
     
         // Verificar si se encontró la pizarra
         if ($this->pizarra) {
@@ -65,6 +69,11 @@ class Creartabla extends Component
     
             // Emitir el evento 'idTablaSeleccionada' con el valor actual de $this->pizarra
             $this->emit('idTablaSeleccionada', $this->pizarra, $this->tablaSeleccionadaId);
+            // return redirect()->route('generarvista')->with([
+            //     'idTablaSeleccionada' => $this->pizarra,
+            //     'tablaSeleccionadaId' => $this->tablaSeleccionadaId
+            // ]);
+            
         }
     
         //dd($this->pizarra, $this->tablaSeleccionadaId);
