@@ -28,40 +28,45 @@ class Creartabla extends Component
     }
 
 
-public function crearTabla($nombreTabla, $atributos)
+// public function crearTabla($elementosInformacion)
+// {
+//     $this->pizarra = pizarra::find(1);  
+    
+//     // Codificar el arreglo resultante como JSON
+//     $tablasJson = json_encode($elementosInformacion);
+//     // Asignar el nuevo JSON al atributo 'tablas'   
+    
+//     $this->pizarra->estado = $tablasJson;
+
+//     // Guardar los cambios en la base de datos
+//     $this->pizarra->save();
+//     $this->tablas=$this->pizarra->estado;
+//     $this->render();
+// }
+
+public function crearTabla($elementosInformacion, $relacionesInformacion)
 {
     $this->pizarra = pizarra::find(1);
-    $nuevaPersona = [
-        'position' => ['x' => 200, 'y' => 200],
-        'size' => ['width' => 120, 'height' => 80],
-        'name' => $nombreTabla,
-        'attributes' => $atributos,
-        'methods' => ['saludar()', 'trabajar()'],
-    ]; 
 
-    // Decodificar el JSON actual del atributo 'tablas' en un arreglo
-  
-    if(!$this->pizarra->estado==null){
-        $tablasArray = json_decode($this->pizarra->estado, true);
-    }
+    // Combinar la información de las tablas y las relaciones en un solo array
+    $data = [
+        'tablas' => $elementosInformacion,
+        'relaciones' => $relacionesInformacion
+    ];
 
-    // Agregar $nuevaPersona al arreglo
-    $tablasArray[] = $nuevaPersona;
-    
+    // Codificar el array combinado como JSON
+    $estadoJson = json_encode($data);
 
-    // Codificar el arreglo resultante como JSON
-    $tablasJson = json_encode($tablasArray);
-
-    // Asignar el nuevo JSON al atributo 'tablas'
-    
-    
-    $this->pizarra->estado = $tablasJson;
+    // Asignar el nuevo JSON al atributo 'estado' de la pizarra
+    $this->pizarra->estado = $estadoJson;
 
     // Guardar los cambios en la base de datos
     $this->pizarra->save();
-    $this->tablas=$this->pizarra->estado;
+
+    $this->tablas = $this->pizarra->estado;
     $this->render();
 }
+
 
 
     

@@ -19,20 +19,15 @@
                             <input type="text" id="inputTableName" placeholder="Nombre de la tabla">
                             <input type="text" id="inputAttributes" placeholder="Atributos separados por comas">
                             <button id="btnAgregarTabla">Agregar Tabla</button>
+                            <button id="guardarPizarra">Guardar Pizarra</button>
+                            <label for="tipoRelacion">Tipo de Relación:</label>
+                            <select id="tipoRelacion">
+                                <option value="composicion">Composición</option>
+                                <option value="agregacion">Agregación</option>
+                                <option value="asociacion">Asociación</option>
+                                <option value="generalizacion">Generalización</option>
+                            </select>
 
-                            <!-- ... código HTML anterior ... -->
-{{-- 
-                            <button wire:click="crearTabla" wire:target="crearTabla">
-                                Agregar Persona</button> --}}
-                                <!-- ... código HTML anterior ... -->
-
-{{-- <button wire:click="crearTabla('Nueva Persona', ['atributo1: Tipo1', 'atributo2: Tipo2'])">Agregar Persona</button> --}}
-
-<!-- ... código HTML posterior ... -->
-
-                            
-
-                            <!-- ... código HTML posterior ... -->
 
                         </div>
                     </div>
@@ -68,10 +63,23 @@
 
     // Array para almacenar la información de las tablas
     var tablasInformacion = [];
+    var relacionesInformacion = [];
 
     @if(isset($tablas))
-    @foreach(json_decode($tablas) as $persona)
-        var persona = @json($persona);
+    @php
+        $data = json_decode($tablas, true);
+        $tablasArray = $data['tablas'];
+    @endphp
+    @foreach($tablasArray as $persona)
+        var persona = {
+            id: "{{ $persona['id'] }}",
+            position: {
+                x: {{ $persona['position']['x'] }},
+                y: {{ $persona['position']['y'] }}
+            },
+            name: "{{ $persona['name'] }}",
+            attributes: {!! json_encode($persona['attributes']) !!}
+        };
         var personaShape = new joint.shapes.uml.Class(persona);
         personaShape.addTo(graph);
 
@@ -83,10 +91,58 @@
             attributes: personaShape.get('attributes')
         });
     @endforeach
-    @endif
+@endif
+
+@if(isset($tablas))
+    @php
+        $data = json_decode($tablas, true);
+        $relacionesArray = $data['relaciones'] ?? [];
+    @endphp
+    @foreach($relacionesArray as $relacion)
+        var sourceId = "{{ $relacion['source'] }}";
+        var targetId = "{{ $relacion['target'] }}";
+        var tipoRelacion = "{{ $relacion['type'] }}";
+
+        // Obtener los objetos de tabla correspondientes a los IDs de origen y destino
+        var tablaFuente = tablasInformacion.find(function(tabla) {
+            return tabla.id === sourceId;
+        });
+
+        var tablaDestino = tablasInformacion.find(function(tabla) {
+            return tabla.id === targetId;
+        });
+
+        if (tablaFuente && tablaDestino) {
+            // Crear la relación en el gráfico
+            var relacionLink = new joint.shapes.standard.Link();
+            relacionLink.source(tablaFuente);
+            relacionLink.target(tablaDestino);
+            relacionLink.attr({
+                line: {
+                    stroke: '#000000'
+                },
+                '.marker-target': {
+                    fill: '#000000',
+                    d: 'M 10 0 L 0 5 L 10 10 z'
+                }
+            });
+            relacionLink.addTo(graph);
+
+            // Guardar la información de la relación en el array
+            relacionesInformacion.push({
+                source: sourceId,
+                target: targetId,
+                type: tipoRelacion
+            });
+        }
+    @endforeach
+@endif
+
+
 
     // Array para almacenar la información de las relaciones
-    var relacionesInformacion = [];
+   
+    var elementosInformacion = [];
 
     // Agrega el código JavaScript para manejar el evento de Livewire
     document.getElementById('btnAgregarTabla').addEventListener('click', function() {
@@ -108,27 +164,29 @@
                 , attributes: attributes
                 , methods: ['metodo1()', 'metodo2()']
             });
-
+           
             nuevaTabla.addTo(graph);
 
             // Guardar la información de la tabla en el array
-            tablasInformacion.push({
+            elementosInformacion.push({
                 id: nuevaTabla.id, // o cualquier identificador único de la tabla
                 position: nuevaTabla.position(),
                 name: nuevaTabla.get('name'),
                 attributes: nuevaTabla.get('attributes')
             });
-
+            console.log('Información melanie:', elementosInformacion);
+          
             // Llamar a la función de Livewire para crear la nueva tabla
-            Livewire.emit('crearTabla', tableName, attributes);
+           // Livewire.emit('crearTabla', tableName, attributes);
         }
     });
+
 
     // Obtener todos los elementos del grafo
     var cells = graph.getCells();
 
     // Array para almacenar la información de posición, nombre y atributos de las tablas
-    var elementosInformacion = [];
+  
 
     // Iterar sobre los elementos para obtener su información
     cells.forEach(function(cell) {
@@ -165,7 +223,7 @@
         // Mostrar la información actualizada en la consola
         console.log('Información actualizada:', elementosInformacion);
     });
-
+    
     // Variables para almacenar las tablas seleccionadas
     var tablaFuenteSeleccionada = null;
     var tablaDestinoSeleccionada = null;
@@ -184,28 +242,69 @@
     });
 
     // Evento para agregar una relación entre las tablas seleccionadas
-document.getElementById('btnAgregarRelacion').addEventListener('click', function() {
+    document.getElementById('btnAgregarRelacion').addEventListener('click', function() {
     if (tablaFuenteSeleccionada !== null && tablaDestinoSeleccionada !== null) {
+        var tipoRelacion = document.getElementById('tipoRelacion').value;
+
         // Crear objeto de relación
         var relacion = {
             source: tablaFuenteSeleccionada.id,
-            target: tablaDestinoSeleccionada.id
+            target: tablaDestinoSeleccionada.id,
+            type: tipoRelacion
         };
 
         // Agregar la relación al array de relaciones o realizar cualquier otra acción que desees
         relacionesInformacion.push(relacion);
 
         // Dibujar la relación en el gráfico
-        var relacionLink = new joint.shapes.standard.Link({
-            source: { id: tablaFuenteSeleccionada.id },
-            target: { id: tablaDestinoSeleccionada.id },
-            router: { name: 'metro' },
-            connector: { name: 'rounded' },
-            attrs: {
-                '.connection': { stroke: 'black', 'stroke-width': 2 },
-                '.marker-target': { fill: 'black', d: 'M 10 0 L 0 5 L 10 10 z' }
-            }
-        });
+        var relacionLink;
+
+        // Seleccionar el tipo de flecha según el tipo de relación
+        if (relacion.type === 'composicion') {
+            relacionLink = new joint.shapes.standard.Link({
+                source: { id: tablaFuenteSeleccionada.id },
+                target: { id: tablaDestinoSeleccionada.id },
+                router: { name: 'metro' },
+                connector: { name: 'rounded' },
+                attrs: {
+                    '.connection': { stroke: 'black', 'stroke-width': 2 },
+        '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'black' }
+                }
+            });
+        } else if (relacion.type === 'agregacion') {
+            relacionLink = new joint.shapes.standard.Link({
+                source: { id: tablaFuenteSeleccionada.id },
+                target: { id: tablaDestinoSeleccionada.id },
+                router: { name: 'metro' },
+                connector: { name: 'rounded' },
+                attrs: {
+                    '.connection': { stroke: 'black', 'stroke-width': 2 },
+        '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }
+                }
+            });
+        } else if (relacion.type === 'asociacion') {
+            relacionLink = new joint.shapes.standard.Link({
+                source: { id: tablaFuenteSeleccionada.id },
+                target: { id: tablaDestinoSeleccionada.id },
+                router: { name: 'metro' },
+                connector: { name: 'rounded' },
+                attrs: {
+                    '.connection': { stroke: 'black', 'stroke-width': 2 },
+        '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }
+                }
+            });
+        } else if (relacion.type === 'generalizacion') {
+            relacionLink = new joint.shapes.standard.Link({
+                source: { id: tablaFuenteSeleccionada.id },
+                target: { id: tablaDestinoSeleccionada.id },
+                router: { name: 'metro' },
+                connector: { name: 'rounded' },
+                attrs: {
+                    '.connection': { stroke: 'black', 'stroke-width': 2 },
+        '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'white' }
+                }
+            });
+        }
 
         graph.addCell(relacionLink);
 
@@ -214,22 +313,27 @@ document.getElementById('btnAgregarRelacion').addEventListener('click', function
         tablaDestinoSeleccionada.attr('body/stroke', 'black'); // Restablecer el color de la tabla destino
         tablaFuenteSeleccionada = null;
         tablaDestinoSeleccionada = null;
-
-        // Actualizar la vista de relaciones
-        actualizarRelaciones();
-
+   
         // Mostrar las relaciones actualizadas en la consola
         console.log('Relaciones actualizadas:', relacionesInformacion);
     }
 });
 
 
-    // Función para actualizar la vista de relaciones
-    function actualizarRelaciones() {
-        // ... código para actualizar la vista de relaciones ...
-    }
+    document.getElementById('guardarPizarra').addEventListener('click', function() {      
+            console.log('Información melanie:', elementosInformacion);          
+           // Llamar a la función de Livewire para crear la nueva tabla
+           Livewire.emit('crearTabla', elementosInformacion, relacionesInformacion);
+        
+    });
+
+
+
+
+
+
 </script>
 </div>
 
-    
+
 </div>
